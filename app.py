@@ -1,7 +1,13 @@
+import requests
 import os
 from flask import Flask
 
 app = Flask(__name__)
+
+@app.route("/api")
+def call_api():
+    response = requests.get("http://api")
+    return f"API response: {response.text}"
 
 @app.route("/")
 def home():
