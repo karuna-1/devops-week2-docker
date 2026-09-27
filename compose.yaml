@@ -1,10 +1,21 @@
 services:
-  web:
-    build: .
-    ports:
-      - "8080:5000"
-    environment:
-      APP_ENV: ${APP_ENV}
-
   api:
-    image: nginx
+    build: ./day9-api
+    container_name: day9-api-container
+    networks:
+      - day9-network
+
+  web:
+    build: ./day9-web
+    container_name: day9-web-container
+    ports:
+      - "5002:5002"
+    env_file:
+      - ./day9-web/.env
+    depends_on:
+      - api
+    networks:
+      - day9-network
+
+networks:
+  day9-network:
