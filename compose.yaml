@@ -2,6 +2,8 @@ services:
   api:
     build: ./day9-api
     container_name: day9-api-container
+    mem_limit: 256m
+    cpus: 0.5
     networks:
       - day9-network
 
