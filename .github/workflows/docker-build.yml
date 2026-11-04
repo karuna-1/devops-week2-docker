@@ -1,0 +1,23 @@
+name: Docker Build CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  docker-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build API Docker image
+        run: docker build -t day9-api ./day9-api
+
+      - name: Build Web Docker image
+        run: docker build -t day9-web ./day9-web
