@@ -1,4 +1,4 @@
-name: Docker Build CI
+name: Docker Build and Push CI
 
 on:
   push:
@@ -16,8 +16,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Build API Docker image
-        run: docker build -t day9-api ./day9-api
+      - name: Login to Docker Hub
+        if: github.event_name == 'push'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
 
-      - name: Build Web Docker image
-        run: docker build -t day9-web ./day9-web
+      - name: Build API image
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/day9-api:latest ./day9-api
+
+      - name: Build Web image
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/day9-web:latest ./day9-web
+
+      - name: Push API image
+        if: github.event_name == 'push'
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/day9-api:latest
+
+      - name: Push Web image
+        if: github.event_name == 'push'
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/day9-web:latest
